@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RegisterLoginAPI.DTOs;
 using RegisterLoginAPI.Models;
 
 namespace RegisterLoginAPI.Controllers;
@@ -18,14 +17,14 @@ public class UserController : ControllerBase
 
     // GET: api/User
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
+    public async Task<ActionResult<IEnumerable<UserModel>>> GetUsers()
     {
-        return await _context.Users.Select(x => UserToDTO(x)).ToListAsync();
+        return await _context.Users.ToListAsync();
     }
 
-    // GET: api/User/5
+    // GET: api/User/{id}
     [HttpGet("{id}")]
-    public async Task<ActionResult<UserDTO>> GetUser(long id)
+    public async Task<ActionResult<UserModel>> GetUser(long id)
     {
         var user = await _context.Users.FindAsync(id);
 
@@ -34,13 +33,12 @@ public class UserController : ControllerBase
             return NotFound();
         }
 
-        return UserToDTO(user);
+        return user;
     }
 
-    // PUT: api/User/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    // PUT: api/User/{id}
     [HttpPut("{id}")]
-    public async Task<IActionResult> PutUser(long id, UserDTO user)
+    public async Task<IActionResult> PutUser(long id, UserModel user)
     {
         if (id != user.Id)
         {
@@ -69,21 +67,9 @@ public class UserController : ControllerBase
     }
 
     // POST: api/User
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<UserDTO>> PostUser(UserDTO userDTO)
+    public async Task<ActionResult<UserModel>> PostUser(UserModel user)
     {
-        var user = new UserModel
-        {
-            Id = userDTO.Id,
-            Name = userDTO.Name,
-            Email = userDTO.Email,
-            Password = userDTO.Password,
-            Address = userDTO.Address,
-            Complement = userDTO.Address,
-            City = userDTO.City,
-            State = userDTO.State
-        };
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
@@ -91,7 +77,7 @@ public class UserController : ControllerBase
         return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
     }
 
-    // DELETE: api/User/5
+    // DELETE: api/User/{id}
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(long id)
     {
@@ -111,19 +97,4 @@ public class UserController : ControllerBase
     {
         return _context.Users.Any(e => e.Id == id);
     }
-
-    private static UserDTO UserToDTO(UserModel user) =>
-        new UserDTO
-        {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            Password = user.Password,
-            Address = user.Address,
-            Complement = user.Address,
-            City = user.City,
-            State = user.State
-        };
-
-
 }

@@ -1,30 +1,10 @@
-using Microsoft.EntityFrameworkCore;
-using RegisterLoginAPI.Models;
-
-var builder = WebApplication.CreateBuilder(args);
-
-
-
-builder.Services.AddControllers();
-// Adiciona o contexto de banco de dados ao contêiner de Injeção de Dependência
-builder.Services.AddDbContext<UserContext>(opt =>
-    opt.UseInMemoryDatabase("UserList")); // Especifica que o contexto de banco de dados usará um banco de dados em memória.
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-
-if (app.Environment.IsDevelopment())
+IHostBuilder CreateHostBuilder(string[] args)
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    return Host.CreateDefaultBuilder(args)
+        .ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.UseStartup<Startup>();
+        });
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+CreateHostBuilder(args).Build().Run();

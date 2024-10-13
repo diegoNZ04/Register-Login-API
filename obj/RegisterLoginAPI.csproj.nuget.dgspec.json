@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\Samsung\\OneDrive\\Área de Trabalho\\Projetos\\RegisterLoginAPI\\RegisterLoginAPI.csproj": {}
+    "C:\\Users\\Samsung\\OneDrive\\Área de Trabalho\\Projetos\\RegisterLoginAPI\\RegisterLoginAPI.csproj": {}
   },
   "projects": {
-    "c:\\Users\\Samsung\\OneDrive\\Área de Trabalho\\Projetos\\RegisterLoginAPI\\RegisterLoginAPI.csproj": {
+    "C:\\Users\\Samsung\\OneDrive\\Área de Trabalho\\Projetos\\RegisterLoginAPI\\RegisterLoginAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Samsung\\OneDrive\\Área de Trabalho\\Projetos\\RegisterLoginAPI\\RegisterLoginAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Samsung\\OneDrive\\Área de Trabalho\\Projetos\\RegisterLoginAPI\\RegisterLoginAPI.csproj",
         "projectName": "RegisterLoginAPI",
-        "projectPath": "c:\\Users\\Samsung\\OneDrive\\Área de Trabalho\\Projetos\\RegisterLoginAPI\\RegisterLoginAPI.csproj",
+        "projectPath": "C:\\Users\\Samsung\\OneDrive\\Área de Trabalho\\Projetos\\RegisterLoginAPI\\RegisterLoginAPI.csproj",
         "packagesPath": "C:\\Users\\Samsung\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Samsung\\OneDrive\\Área de Trabalho\\Projetos\\RegisterLoginAPI\\obj\\",
+        "outputPath": "C:\\Users\\Samsung\\OneDrive\\Área de Trabalho\\Projetos\\RegisterLoginAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -50,6 +50,14 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.10, )"
