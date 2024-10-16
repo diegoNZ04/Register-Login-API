@@ -19,17 +19,11 @@ public class UserModel
     public string Email { get; set; } = default!;
     [StringLength(50)]
     [Required]
-    public string PasswordHash { get; set; } = default!;
+    public byte[] PasswordHash { get; set; } = default!;
+    [StringLength(50)]
+    [Required]
+    public byte[] PasswordSalt { get; set; } = default!;
     [StringLength(255)]
     [Required]
     public string Address { get; set; } = default!;
-    [StringLength(255)]
-    public string? Complement { get; set; } = default!;
-    [Required]
-    [StringLength(50)]
-    public string City { get; set; } = default!;
-    [Required]
-    [StringLength(50)]
-    public string State { get; set; } = default!;
-
 }

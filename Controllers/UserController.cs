@@ -67,8 +67,8 @@ public class UserController : ControllerBase
     }
 
     // POST: api/User
-    [HttpPost]
-    public async Task<ActionResult<UserModel>> PostUser(UserModel user)
+    [HttpPost("register")]
+    public async Task<ActionResult<UserModel>> RegistertUser(UserModel user)
     {
 
         _context.Users.Add(user);

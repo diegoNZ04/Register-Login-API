@@ -1,41 +1,32 @@
 using Microsoft.EntityFrameworkCore;
-using RegisterLoginAPI.Helpers;
 using RegisterLoginAPI.Models;
-using RegisterLoginAPI.Services;
 using RegisterLoginAPI.Repositories;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using System.Text;
+using RegisterLoginAPI.Interfaces;
 
 public class Startup
 {
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
-        key = Configuration?.GetSection("Jwt").ToString() ?? "";
     }
-
-    private string key = "";
 
     public IConfiguration Configuration { get; set; } = default!;
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddCors();
+        services.AddMvc(options => options.EnableEndpointRouting = false);
+        services.AddControllers();
+
         services.AddDbContext<UserContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddScoped<AuthService>();
-        services.AddScoped<AuthResult>();
-        services.AddScoped<UserRepository>();
-
-        services.AddSingleton<JwtHelper>(new JwtHelper(Configuration["Jwt:Secret"]));
-
-        services.AddControllers();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IAuthRepository, AuthRepository>();
 
         services.AddAuthentication(options =>
         {
@@ -43,10 +34,14 @@ public class Startup
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
         }).AddJwtBearer(options =>
         {
+            options.RequireHttpsMetadata = false;
+            options.SaveToken = true;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Convert.FromBase64String(Configuration["Jwt:Secret"])),
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.ASCII.GetBytes(Configuration.GetSection("AppSettings:Token").Value)
+                ),
                 ValidateIssuer = false,
                 ValidateAudience = false
             };
@@ -92,12 +87,9 @@ public class Startup
         }
 
         app.UseRouting();
+        app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
         app.UseAuthentication();
         app.UseAuthorization();
-
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
+        app.UseMvc();
     }
 }

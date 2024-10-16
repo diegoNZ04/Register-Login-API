@@ -1,51 +1,45 @@
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RegisterLoginAPI.Interfaces;
 using RegisterLoginAPI.Models;
 
 namespace RegisterLoginAPI.Repositories;
 
-public class UserRepository
+public class UserRepository : IUserRepository
 {
-    private readonly UserContext _context;
-
+    private UserContext context;
     public UserRepository(UserContext context)
     {
-        _context = context;
+        this.context = context;
+    }
+    public IEnumerable<UserModel> GetAllUsers()
+    {
+        return context.Users.ToList();
     }
 
-    public UserModel CreatedUser(UserModel user)
+    public UserModel? GetUserById(long id)
     {
-        _context.Users.Add(user);
-        _context.SaveChanges();
-
-        return user;
+        return context.Users.Find(id);
+        // context.Users.Where(x => x.Id == id).FirstOrDefault();
+    }
+    public void InsertUser(UserModel user)
+    {
+        context.Users.Add(user);
+        context.SaveChanges();
     }
 
-    public UserModel GetUserByUsername(string username)
-    {
-        var user = _context.Users.SingleOrDefault(u => u.Username == username);
 
-        return user;
+    public void DeleteUser(long id)
+    {
+        UserModel user = context.Users.Find(id);
+        context.Users.Remove(user);
+        context.SaveChanges();
+
     }
 
     public void UpdateUser(UserModel user)
     {
-        _context.Users.Update(user);
-        _context.SaveChanges();
-    }
-
-    public void DeleteUser(long id)
-    {
-        var user = _context.Users.SingleOrDefault(u => u.Id == id);
-        if (user != null)
-        {
-            _context.Users.Remove(user);
-            _context.SaveChanges();
-        }
-    }
-
-    public List<UserModel> GetAllUsers()
-    {
-        return _context.Users.ToList();
+        context.Entry(user).State = EntityState.Modified;
+        context.SaveChanges();
     }
 
 }
